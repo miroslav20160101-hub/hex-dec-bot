@@ -22,18 +22,6 @@ def dec_to_hex(message):
 
 print("🚀 Dec-Hex Bot")
 bot.infinity_polling()
-            f"**{decimal:,}₁₀** = **{hex_value}₁₆**\n\n"
-            f"_Десятичное → Шестнадцатеричное_\n"
-            f"`0x{hex_value}`",
-            parse_mode='Markdown'
-        )
-        
-    except ValueError:
-        bot.reply_to(
-            message,
-            "❌ *Ошибка!*\n\n"
-            "✅ Примеры:\n"
-            "• `255` → `FF`\n"
             "• `6847` → `1A3F`\n"
             "• `10` → `A`\n\n"
             "_Целые числа ≥ 0_",

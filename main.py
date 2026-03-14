@@ -1,39 +1,59 @@
 import telebot
 import os
 
+# Токен из переменных Bothost (НИКОГДА не вставляйте сюда!)
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 bot = telebot.TeleBot(BOT_TOKEN)
 
 @bot.message_handler(commands=['start', 'help'])
-def send_welcome(message):
+def start(message):
     bot.reply_to(
         message,
-        "🔢 *Hex → Decimal Converter*\n\n"
-        "Пришли число в 16‑ичной системе:\n"
-        "• `FF`\n"
-        "• `1A3F`\n"
-        "• `0xABC`\n\n"
-        "_Только 0-9, A-F_",
+        "🔄 *DEC → HEX Конвертер*\n\n"
+        "Пришли число в **десятичной** системе:\n\n"
+        "• `255` → `FF`\n"
+        "• `6847` → `1A3F`\n"
+        "• `175` → `AF`\n\n"
+        "_Только целые неотрицательные числа_",
         parse_mode='Markdown'
     )
 
 @bot.message_handler(func=lambda m: True)
-def convert_hex(message):
-    text = message.text.strip().upper()
-    if text.startswith("0X"):
-        text = text[2:]
+def dec_to_hex(message):
+    text = message.text.strip()
     
     try:
-        value = int(text, 16)
+        # Преобразуем DEC в число
+        decimal = int(text)
+        
+        if decimal < 0:
+            raise ValueError("Отрицательное число")
+            
+        # Переводим в HEX (верхний регистр, без 0x)
+        hex_value = hex(decimal)[2:].upper()
+        
         bot.reply_to(
             message,
-            f"**{text}₁₆** = **{value:,}₁₀**\n\n"
-            f"_({value})_\n"
-            f"`{hex(value)}`",
+            f"**{decimal:,}₁₀** = **{hex_value}₁₆**\n\n"
+            f"_Десятичное → Шестнадцатеричное_\n"
+            f"`0x{hex_value}`",
             parse_mode='Markdown'
         )
+        
     except ValueError:
         bot.reply_to(
+            message,
+            "❌ *Ошибка!*\n\n"
+            "✅ Примеры:\n"
+            "• `255` → `FF`\n"
+            "• `6847` → `1A3F`\n"
+            "• `10` → `A`\n\n"
+            "_Целые числа ≥ 0_",
+            parse_mode='Markdown'
+        )
+
+print("🚀 Dec → Hex Bot запущен!")
+bot.infinity_polling()
             message,
             "❌ *Ошибка!*\n\n"
             "✅ Правильно:\n"

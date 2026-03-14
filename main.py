@@ -1,24 +1,18 @@
 import telebot
 import os
-
 bot=telebot.TeleBot(os.environ.get('BOT_TOKEN'))
-
 @bot.message_handler(commands=['start'])
-def s(m):bot.reply_to(m,'DEC→HEX')
-
+def start(message):
+ bot.reply_to(message,"DEC→HEX")
 @bot.message_handler()
-def c(m):
+def convert(message):
  try:
-  n=int(m.text)
-  bot.reply_to(m,f'{n}={hex(n)[2:].upper()}')
- except:bot.reply_to(m,'❌')
-
-bot.infinity_polling()
-            "• `1A3F` → 6847\n"
-            "• `0xFF` → 255\n\n"
-            "_Только цифры 0-9 и A-F_",
-            parse_mode='Markdown'
-        )
-
-print("🚀 Hex-Dec Bot запущен!")
+  n=int(message.text)
+  if n>=0:
+   h=hex(n)[2:].upper()
+   bot.reply_to(message,f"{n}={h}")
+  else:
+   bot.reply_to(message,"❌")
+ except:
+  bot.reply_to(message,"❌")
 bot.infinity_polling()
